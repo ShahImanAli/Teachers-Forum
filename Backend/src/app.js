@@ -29,9 +29,9 @@ app.use(
         // Fallback for Vercel to help debug, returning the exact origin if in production
         // It's safer to explicitly allow it during setup, but you should refine this later
         if (process.env.NODE_ENV === "production" || process.env.VERCEL) {
-             callback(null, origin);
+          callback(null, origin);
         } else {
-             callback(new Error("Not allowed by CORS"));
+          callback(new Error("Not allowed by CORS"));
         }
       }
     },
