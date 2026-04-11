@@ -1,0 +1,26 @@
+node_modules/
+.env
+.env.*
+!.env.example
+dist/
+build/
+.DS_Store
+.vscode/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE/Editor
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Uploads / Temp
+Backend/public/temp/

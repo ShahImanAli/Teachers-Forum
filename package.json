@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "opencode-ai": "^1.2.27",
+    "opencode-windows-x64-baseline": "^1.2.27"
+  }
+}
