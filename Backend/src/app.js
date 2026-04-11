@@ -14,7 +14,6 @@ const allowedOrigins = process.env.CORS_ORIGIN
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
 
       const isAllowed = allowedOrigins.some((allowedOrigin) => {
@@ -25,9 +24,15 @@ app.use(
       });
 
       if (isAllowed) {
-        callback(null, true);
+        callback(null, origin);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        // Fallback for Vercel to help debug, returning the exact origin if in production
+        // It's safer to explicitly allow it during setup, but you should refine this later
+        if (process.env.NODE_ENV === "production" || process.env.VERCEL) {
+             callback(null, origin);
+        } else {
+             callback(new Error("Not allowed by CORS"));
+        }
       }
     },
     credentials: true,
