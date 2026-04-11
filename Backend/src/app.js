@@ -7,8 +7,8 @@ dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 const app = express();
 
-const allowedOrigins = process.env.CORS_ORIGIN 
-  ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim()) 
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim())
   : [/^http:\/\/localhost:\d+$/]; // Enable multiple origins properly (important for Vercel)
 
 app.use(
@@ -16,8 +16,8 @@ app.use(
     origin: function (origin, callback) {
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
-      
-      const isAllowed = allowedOrigins.some(allowedOrigin => {
+
+      const isAllowed = allowedOrigins.some((allowedOrigin) => {
         if (allowedOrigin instanceof RegExp) {
           return allowedOrigin.test(origin);
         }
@@ -27,7 +27,7 @@ app.use(
       if (isAllowed) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
@@ -55,7 +55,6 @@ import classroomRouter from "./routes/classroom.routes.js";
 import commentRouter from "./routes/comment.routes.js";
 import assignmentRouter from "./routes/assignment.routes.js";
 
-
 // import authRouter from "./routes/auth.routes.js";
 
 //Routes declaration
@@ -64,7 +63,5 @@ app.use("/api/v1/verification", verificationRouter);
 app.use("/api/v1/classrooms", classroomRouter);
 app.use("/api/v1/comments", commentRouter);
 app.use("/api/v1/assignments", assignmentRouter);
-
-
 
 export { app };

@@ -8,15 +8,12 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import { Verification } from "../models/verification.model.js";
 
-
 const generateAccessandRefreshToken = async (userId) => {
   try {
-
     const user = await User.findById(userId);
 
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshToken();
-
 
     user.refreshToken = refreshToken;
 
@@ -27,8 +24,6 @@ const generateAccessandRefreshToken = async (userId) => {
     throw new ApiError(500, "Error in generating tokens");
   }
 };
-
-
 
 const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, username, password, role, otp } = req.body;
@@ -86,7 +81,6 @@ const registerUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, createdUser, "User registered successfully"));
 });
 
-
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -120,24 +114,22 @@ const loginUser = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { user: loggedInUser, accessToken , refreshToken },
+        { user: loggedInUser, accessToken, refreshToken },
         "User logged in successfully"
       )
     );
 });
-
-
 
 const logoutUser = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate(
     req.user._id,
     {
       $set: {
-        refreshToken: undefined,  
+        refreshToken: undefined,
       },
     },
     {
-      new: true, 
+      new: true,
     }
   );
 
@@ -153,8 +145,6 @@ const logoutUser = asyncHandler(async (req, res) => {
     .clearCookie("refreshToken", options)
     .json(new ApiResponse(200, {}, "User logged out successfully"));
 });
-
-
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
   //user apna refresh token bhejta hai woh access kiya hai hum ny in incomingRefreshToken variable mai
@@ -207,16 +197,11 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
-
-
 const getCurrentUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
 });
-
-
-
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
   const { fullName, email } = req.body;
@@ -237,7 +222,10 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
   ).select("-password");
 
   if (!user) {
-    throw new ApiError(500, "Something went wrong while updating account details");
+    throw new ApiError(
+      500,
+      "Something went wrong while updating account details"
+    );
   }
 
   return res
@@ -253,4 +241,3 @@ export {
   getCurrentUser,
   updateAccountDetails,
 };
-
