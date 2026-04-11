@@ -7,24 +7,22 @@ dotenv.config({
 import { app } from "./app.js";
 import connectDB from "./db/index.js";
 
-
 //jb async function complete hota hai tou woh aik promise return karta hai
 connectDB()
   .then(() => {
-  app.listen(process.env.PORT || 8000, () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
+    // Only listen if not running in Serverless/Vercel environment
+    if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
+      app.listen(process.env.PORT || 8000, () => {
+        console.log(`Server is running on port ${process.env.PORT}`);
+      });
+    }
+  })
+  .catch((error) => {
+    console.error("MongoDb Connection Failed! ", error);
   });
- })
-  
-.catch((error) => {
-  console.error("MongoDb Connection Failed! ", error);
-})
 
-
-
-
-
-
+// Export app for Vercel serverless deployment
+export default app;
 
 // *1st way to connect to db *
 
