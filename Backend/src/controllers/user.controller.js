@@ -206,30 +206,30 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 const updateAccountDetails = asyncHandler(async (req, res) => {
   const { fullName, email } = req.body;
 
-  // Build update payload with only the fields that were provided
-  const updateData = {};
-  if (fullName) updateData.fullName = fullName;
-  if (email) updateData.email = email;
-
-  if (Object.keys(updateData).length === 0) {
-    throw new ApiError(400, "No fields to update");
+  if (!fullName || !email) {
+    throw new ApiError(400, "All fields are required");
   }
 
-  // Prevent updating to an email that already belongs to a different account
-  if (email) {
-    const existingUser = await User.findOne({
-      email,
-      _id: { $ne: req.user?._id },
-    });
+  // Prevent updating to an email that already belongs to a different account.
+  // Without this, a duplicate email would trigger an uncaught Mongoose E11000
+  // error and surface as a 500.
+  const existingUser = await User.findOne({
+    email,
+    _id: { $ne: req.user?._id },
+  });
 
-    if (existingUser) {
-      throw new ApiError(409, "Email is already in use by another account");
-    }
+  if (existingUser) {
+    throw new ApiError(409, "Email is already in use by another account");
   }
 
   const user = await User.findByIdAndUpdate(
     req.user?._id,
-    { $set: updateData },
+    {
+      $set: {
+        fullName,
+        email,
+      },
+    },
     { new: true }
   ).select("-password");
 
