@@ -62,17 +62,11 @@ import assignmentRouter from "./routes/assignment.routes.js";
 
 // import authRouter from "./routes/auth.routes.js";
 
-// Error handling middleware (registered after all routes)
-import { errorHandler } from "./middlewares/error.middleware.js";
-
 //Routes declaration
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/verification", verificationRouter);
 app.use("/api/v1/classrooms", classroomRouter);
 app.use("/api/v1/comments", commentRouter);
 app.use("/api/v1/assignments", assignmentRouter);
-
-// Centralized error handler
-app.use(errorHandler);
 
 export { app };
